@@ -1,0 +1,123 @@
+# --------------------------
+# Node.js 核心依赖与产物
+# --------------------------
+# npm/yarn/pnpm 依赖目录（切勿提交 node_modules，需本地安装）
+node_modules/
+# pnpm 专属锁文件（若用 pnpm 需保留，其他包管理器可删除）
+pnpm-lock.yaml
+# yarn 专属锁文件（若用 yarn 需保留，其他包管理器可删除）
+yarn.lock
+# npm 锁文件（推荐保留，确保依赖版本一致）
+package-lock.json
+# 依赖包的缓存目录
+.npm/
+.yarn/
+.pnpm-store/
+
+# --------------------------
+# 构建/打包产物
+# --------------------------
+# 编译后的 JS 产物（如 TypeScript 编译后的 dist 目录）
+dist/
+build/
+out/
+lib/
+# 打包工具临时文件
+.esbuild/
+.rollup.cache/
+.webpack-cache/
+# 静态资源构建产物（如 Vue/React 项目的 build 目录）
+public/build/
+assets/dist/
+
+# --------------------------
+# 环境变量与敏感信息
+# --------------------------
+# 环境变量文件（存储密钥、数据库地址等敏感信息，切勿提交）
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+# 自定义配置文件（如你之前的 config.ini，若包含敏感信息需屏蔽）
+config.ini
+config.json
+# 密钥/证书文件
+*.pem
+*.key
+*.crt
+*.pfx
+
+# --------------------------
+# 日志与临时文件
+# --------------------------
+# 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# 临时文件
+tmp/
+temp/
+*.tmp
+*.temp
+# 操作系统临时文件
+.DS_Store  # Mac 系统
+Thumbs.db  # Windows 系统
+desktop.ini # Windows 系统
+
+# --------------------------
+# 编辑器/IDE 配置
+# --------------------------
+# VS Code 配置
+.vscode/
+!.vscode/extensions.json  # 可选：保留扩展推荐列表（团队协作有用）
+!.vscode/settings.json    # 可选：保留通用设置（无敏感信息时）
+# WebStorm/IntelliJ 配置
+.idea/
+*.iml
+*.iws
+*.ipr
+# Sublime Text 配置
+*.sublime-*
+# Vim 配置
+*.swp
+*.swo
+# 其他编辑器
+.project
+.classpath
+.c9/
+.idea/
+.vim/
+
+# --------------------------
+# 测试相关文件
+# --------------------------
+# 测试覆盖率报告
+coverage/
+.nyc_output/
+# 测试临时文件
+test-results/
+jest-junit.xml
+*.tap
+
+# --------------------------
+# 其他无用文件
+# --------------------------
+# npm 发布相关文件（若项目是 npm 包，可保留，否则屏蔽）
+# .npmignore
+# .publishrc
+# 文档构建产物
+docs/_site/
+docs/.vuepress/dist/
+# 缓存文件
+.cache/
+.eslintcache
+.stylelintcache
+# 其他
+*.bak
+*.old
+*.swp
+*~
