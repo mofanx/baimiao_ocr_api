@@ -79,7 +79,7 @@ class BaimiaoApiClient:
 
 def main() -> None:
         
-    client = BaimiaoApiClient(base_url=base_url, api_key=api_key)
+    client = BaimiaoApiClient()
     
     url = "https://example.com/sample.png"
 
