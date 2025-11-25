@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
+import io
+from typing import Optional, Union
 
 import requests
+from PIL import Image
 
 
 class BaimiaoApiClient:
@@ -40,36 +42,52 @@ class BaimiaoApiClient:
         self.session = requests.Session()
         self.session.headers.update({"Authorization": f"Bearer {self.api_key}"})
 
-    def recognize(self, image_source: str) -> str:
+    def recognize(self, image_source: Union[str, Image.Image]) -> str:
         """提交图片进行 OCR 识别，返回纯文本结果。
 
         Args:
-            image_source: 图片来源，可以是 URL 或本地文件路径。
+            image_source: 图片来源，可以是 URL、本地文件路径或 PIL Image 对象。
 
         Returns:
             识别出的文字（带换行）。
         """
-        if not image_source or not isinstance(image_source, str):
-            raise ValueError("image_source 必须是非空字符串")
+        if not image_source:
+            raise ValueError("image_source 必须是非空")
 
         endpoint = f"{self.base_url}/ocr"
 
         try:
-            if image_source.startswith("http://") or image_source.startswith("https://"):
-                payload = {"image_url": image_source}
-                response = self.session.post(endpoint, json=payload, timeout=self.timeout)
+            if isinstance(image_source, str):
+                if image_source.startswith("http://") or image_source.startswith("https://"):
+                    payload = {"image_url": image_source}
+                    response = self.session.post(endpoint, json=payload, timeout=self.timeout)
+                else:
+                    if not os.path.isfile(image_source):
+                        raise FileNotFoundError(f"找不到文件：{image_source}")
+                    with open(image_source, "rb") as file_handler:
+                        files = {
+                            "file": (
+                                os.path.basename(image_source),
+                                file_handler,
+                                "application/octet-stream",
+                            )
+                        }
+                        response = self.session.post(endpoint, files=files, timeout=self.timeout)
+            elif isinstance(image_source, Image.Image):
+                # Convert PIL Image to bytes
+                img_byte_arr = io.BytesIO()
+                image_source.save(img_byte_arr, format='PNG')
+                img_byte_arr.seek(0)
+                files = {
+                    "file": (
+                        "screenshot.png",
+                        img_byte_arr,
+                        "image/png",
+                    )
+                }
+                response = self.session.post(endpoint, files=files, timeout=self.timeout)
             else:
-                if not os.path.isfile(image_source):
-                    raise FileNotFoundError(f"找不到文件：{image_source}")
-                with open(image_source, "rb") as file_handler:
-                    files = {
-                        "file": (
-                            os.path.basename(image_source),
-                            file_handler,
-                            "application/octet-stream",
-                        )
-                    }
-                    response = self.session.post(endpoint, files=files, timeout=self.timeout)
+                raise ValueError("不支持的图片类型")
 
             response.raise_for_status()
             return response.text
